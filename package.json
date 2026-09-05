@@ -1,0 +1,60 @@
+{
+  "name": "file-tidy",
+  "version": "0.1.0",
+  "description": "A local-first desktop app for safely organizing existing files.",
+  "private": true,
+  "type": "module",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "build:icon": "node scripts/create-icon.mjs",
+    "build:main": "tsc -p tsconfig.main.json",
+    "build:renderer": "vite build",
+    "build": "pnpm run build:icon && pnpm run typecheck && pnpm run build:main && pnpm run build:renderer",
+    "start": "pnpm run build && electron .",
+    "test": "tsx --test test/file-organizer.test.ts",
+    "typecheck": "tsc -p tsconfig.main.json --noEmit && tsc -p tsconfig.renderer.json --noEmit",
+    "dist:win": "pnpm run build && electron-builder --win portable --x64",
+    "dist:installer": "pnpm run build && electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.4.0",
+    "@mui/material": "^9.4.0",
+    "@types/node": "^26.4.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "electron": "^39.0.0",
+    "electron-builder": "^26.0.0",
+    "pngjs": "^7.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2"
+  },
+  "build": {
+    "appId": "com.filetidy.organizer",
+    "productName": "File Tidy",
+    "asar": true,
+    "directories": {
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/main/**/*",
+      "dist/core/**/*",
+      "dist/renderer/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "portable"
+      ]
+    },
+    "portable": {
+      "artifactName": "File-Tidy-${version}-win-x64.exe"
+    }
+  }
+}
